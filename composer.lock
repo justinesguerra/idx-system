@@ -5973,7 +5973,7 @@
             "version": "v0.4.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Kamona-WD/kui-laravel-breeze.git",
+                "url": "https://github.com/justinesguerra/idx-system/kui-laravel-breeze.git",
                 "reference": "cf80c0c8f2956565ce7cb47f741dca5a7cc47e84"
             },
             "dist": {
@@ -6010,7 +6010,7 @@
                 }
             ],
             "description": "Different UI for laravel/breeze",
-            "homepage": "https://github.com/Kamona-WD/kui-laravel-breeze",
+            "homepage": "https://github.com/justinesguerra/idx-system/kui-laravel-breeze",
             "keywords": [
                 "alpinejs",
                 "breeze",
@@ -6022,8 +6022,8 @@
                 "vuejs"
             ],
             "support": {
-                "issues": "https://github.com/Kamona-WD/kui-laravel-breeze/issues",
-                "source": "https://github.com/Kamona-WD/kui-laravel-breeze/tree/v0.4.0"
+                "issues": "https://github.com/justinesguerra/idx-system/kui-laravel-breeze/issues",
+                "source": "https://github.com/justinesguerra/idx-system/kui-laravel-breeze/tree/v0.4.0"
             },
             "time": "2022-12-29T03:45:53+00:00"
         },
