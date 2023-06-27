@@ -2,6 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,11 +24,7 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->name('dashboard');
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -32,28 +32,22 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::group(['middleware' => ['auth']], function() {
+    Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
+    Route::resource('products', ProductController::class);
+});
+
 Route::get('/buttons/text', function () {
     return view('buttons-showcase.text');
-})->name('buttons.text');
+})->middleware(['auth'])->name('buttons.text');
 
 Route::get('/buttons/icon', function () {
     return view('buttons-showcase.icon');
-})->name('buttons.icon');
+})->middleware(['auth'])->name('buttons.icon');
 
 Route::get('/buttons/text-icon', function () {
     return view('buttons-showcase.text-icon');
-})->name('buttons.text-icon');
-
-// Route::get('/buttons/text', function () {
-//     return view('buttons-showcase.text');
-// })->middleware(['auth'])->name('buttons.text');
-
-// Route::get('/buttons/icon', function () {
-//     return view('buttons-showcase.icon');
-// })->middleware(['auth'])->name('buttons.icon');
-
-// Route::get('/buttons/text-icon', function () {
-//     return view('buttons-showcase.text-icon');
-// })->middleware(['auth'])->name('buttons.text-icon');
+})->middleware(['auth'])->name('buttons.text-icon');
 
 require __DIR__ . '/auth.php';
