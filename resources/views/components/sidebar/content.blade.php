@@ -15,7 +15,7 @@
     </x-sidebar.link>
 
     <x-sidebar.dropdown
-        title="Buttons"
+        title="User Admin"
         :active="Str::startsWith(request()->route()->uri(), 'buttons')"
     >
         <x-slot name="icon">
@@ -23,17 +23,17 @@
         </x-slot>
 
         <x-sidebar.sublink
-            title="Text button"
+            title="Manage Users"
             href="{{ route('buttons.text') }}"
             :active="request()->routeIs('buttons.text')"
         />
         <x-sidebar.sublink
-            title="Icon button"
+            title="Manage Role"
             href="{{ route('buttons.icon') }}"
             :active="request()->routeIs('buttons.icon')"
         />
         <x-sidebar.sublink
-            title="Text with icon"
+            title="Manage Product"
             href="{{ route('buttons.text-icon') }}"
             :active="request()->routeIs('buttons.text-icon')"
         />
@@ -44,7 +44,7 @@
         x-show="isSidebarOpen || isSidebarHovered"
         class="text-sm text-gray-500"
     >
-        Dummy Links
+        MANAGEMENT
     </div>
 
     @php
