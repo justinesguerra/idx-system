@@ -50,4 +50,19 @@ Route::get('/buttons/text-icon', function () {
     return view('buttons-showcase.text-icon');
 })->middleware(['auth'])->name('buttons.text-icon');
 
+
+Route::get('/agency/index', function () {
+    return view('agency.index');
+})->middleware(['auth'])->name('agency.index');
+
+
+Route::get('/agent', function () {
+    return view('agent');
+})->middleware(['auth'])->name('agent');
+
+Route::get('/integrations', function () {
+    return view('integrations');
+})->middleware(['auth'])->name('integrations');
+
+
 require __DIR__ . '/auth.php';
