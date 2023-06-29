@@ -24,10 +24,10 @@
 
         <x-sidebar.sublink
             title="Manage Users"
-            href="{{ route('buttons.text') }}"
-            :active="request()->routeIs('buttons.text')"
+            href="{{ route('users.index') }}"
+            :active="request()->routeIs('users.index')"
         />
-        <x-sidebar.sublink
+        {{-- <x-sidebar.sublink
             title="Manage Role"
             href="{{ route('buttons.icon') }}"
             :active="request()->routeIs('buttons.icon')"
@@ -36,7 +36,7 @@
             title="Manage Product"
             href="{{ route('buttons.text-icon') }}"
             :active="request()->routeIs('buttons.text-icon')"
-        />
+        /> --}}
     </x-sidebar.dropdown>
 
     <div
