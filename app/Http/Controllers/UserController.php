@@ -11,7 +11,9 @@ use Hash;
 use Illuminate\Support\Arr;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
-    
+use Illuminate\Support\Facades\DB as FacadesDB;
+use Illuminate\Support\Facades\Hash as FacadesHash;
+
 class UserController extends Controller
 {
     /**
@@ -54,7 +56,7 @@ class UserController extends Controller
         ]);
     
         $input = $request->all();
-        $input['password'] = Hash::make($input['password']);
+        $input['password'] = FacadesHash::make($input['password']);
     
         $user = User::create($input);
         $user->assignRole($request->input('roles'));
@@ -108,14 +110,14 @@ class UserController extends Controller
     
         $input = $request->all();
         if(!empty($input['password'])){ 
-            $input['password'] = Hash::make($input['password']);
+            $input['password'] = FacadesHash::make($input['password']);
         }else{
             $input = Arr::except($input,array('password'));    
         }
     
         $user = User::find($id);
         $user->update($input);
-        DB::table('model_has_roles')->where('model_id',$id)->delete();
+        FacadesDB::table('model_has_roles')->where('model_id',$id)->delete();
     
         $user->assignRole($request->input('roles'));
     
