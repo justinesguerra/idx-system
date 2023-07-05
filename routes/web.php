@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
+use Illuminate\Support\Facades\Artisan;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,3 +52,14 @@ Route::get('/buttons/text-icon', function () {
 })->middleware(['auth'])->name('buttons.text-icon');
 
 require __DIR__ . '/auth.php';
+
+Route::get('migrate', function () {
+    Artisan::call('migrate', [
+        '--force' => true
+     ]);
+    Artisan::call('db:seed', [
+        '--force' => true
+     ]); // Run seeders
+
+    return 'Database Migration and Seeding Done';
+});
