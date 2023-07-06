@@ -47,12 +47,14 @@
         MANAGEMENT
     </div>
 
-    @php
-        $links = array_fill(0, 20, '');
-    @endphp
-
-    @foreach ($links as $index => $link)
-        <x-sidebar.link title="Dummy link {{ $index + 1 }}" href="#" />
-    @endforeach
+    <x-sidebar.link
+        title="Lead Management"
+        href="{{ route('leads.index') }}"
+        :isActive="request()->routeIs('leads*')"
+    >
+        <x-slot name="icon">
+            <x-icons.empty-circle class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
+        </x-slot>
+    </x-sidebar.link>
 
 </x-perfect-scrollbar>
