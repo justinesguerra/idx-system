@@ -36,7 +36,7 @@
             $variantClasses = 'bg-black text-gray-300 hover:text-white hover:bg-gray-800 focus:ring-black dark:hover:bg-dark-eval-3';
         break;
         default:
-            $variantClasses = 'bg-[#EA5B0C] text-white hover:bg-[#d2510a] focus:ring-purple-500';
+            $variantClasses = 'bg-[#EA5B0C] text-white hover:bg-[#d2510a] focus:ring-[#EA5B0C]';
     }
 
     switch ($size) {

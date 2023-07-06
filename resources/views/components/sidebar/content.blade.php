@@ -50,7 +50,7 @@
     <x-sidebar.link
         title="Lead Management"
         href="{{ route('leads.index') }}"
-        :isActive="request()->routeIs('leads.index')"
+        :isActive="request()->routeIs('leads*')"
     >
         <x-slot name="icon">
             <x-icons.empty-circle class="flex-shrink-0 w-6 h-6" aria-hidden="true" />
