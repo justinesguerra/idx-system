@@ -1,7 +1,7 @@
 <?php
-    
+
 namespace App\Http\Controllers;
-    
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -13,9 +13,20 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB as FacadesDB;
 use Illuminate\Support\Facades\Hash as FacadesHash;
+use App\Services\APIRequestService;
+use App\Traits\AppConfigTrait;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class LeadController extends Controller
 {
+    private $apiRequestService;
+
+    public function __construct(APIRequestService $apiRequestService)
+    {
+        $this->apiRequestService = $apiRequestService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -23,12 +34,42 @@ class LeadController extends Controller
      */
     public function index(Request $request): View
     {
-        $data = User::latest()->paginate(5);
-  
-        return view('leads.index',compact('data'))
-            ->with('i', ($request->input('page', 1) - 1) * 5);
+        $leadUrl = AppConfigTrait::get('LEADS_URL', false);
+
+        $lead_api_response = $this->apiRequestService->api($leadUrl);
+
+        // Get the response body as an array
+        $lead_data = $lead_api_response->json();
+
+        // Convert lead_data to a collection
+        $lead_data_collection = new Collection($lead_data);
+
+        // Sort the collection based on the request
+        $sort = request()->input('sort');
+        $direction = request()->input('direction');
+
+        if ($sort && in_array($sort, ['first_name', 'email'])) {
+            $lead_data_collection = $lead_data_collection->sortBy($sort, SORT_REGULAR, $direction === 'desc');
+        }
+
+        // Define how many items we want to be visible in each page
+        $perPage = 5;
+
+        // Get current page form url e.x. &page=1
+        $page = LengthAwarePaginator::resolveCurrentPage();
+
+        // Slice the collection to get the items to display in current page
+        $currentPageItems = $lead_data_collection->slice($page * $perPage - $perPage, $perPage)->all();
+
+        // Create our paginator and passing it to the view
+        $paginatedLeadData = new LengthAwarePaginator($currentPageItems, count($lead_data_collection), $perPage);
+
+        // set url path for generated links
+        $paginatedLeadData->setPath(request()->url());
+
+        return view('leads.index', compact('paginatedLeadData'))->with('i', ($request->input('page', 1) - 1) * $perPage);
     }
-    
+
     /**
      * Show the form for creating a new resource.
      *
@@ -36,10 +77,10 @@ class LeadController extends Controller
      */
     public function create(): View
     {
-        $roles = Role::pluck('name','name')->all();
-        return view('users.create',compact('roles'));
+        $roles = Role::pluck('name', 'name')->all();
+        return view('users.create', compact('roles'));
     }
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -52,19 +93,20 @@ class LeadController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|same:confirm-password',
-            'roles' => 'required'
+            'roles' => 'required',
         ]);
-    
+
         $input = $request->all();
         $input['password'] = FacadesHash::make($input['password']);
-    
+
         $user = User::create($input);
         $user->assignRole($request->input('roles'));
-    
-        return redirect()->route('users.index')
-                        ->with('success','User created successfully');
+
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'User created successfully');
     }
-    
+
     /**
      * Display the specified resource.
      *
@@ -74,9 +116,9 @@ class LeadController extends Controller
     public function show($id): View
     {
         $user = User::find($id);
-        return view('leads.show',compact('user'));
+        return view('leads.show', compact('user'));
     }
-    
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -86,12 +128,12 @@ class LeadController extends Controller
     public function edit($id): View
     {
         $user = User::find($id);
-        $roles = Role::pluck('name','name')->all();
-        $userRole = $user->roles->pluck('name','name')->all();
-    
-        return view('users.edit',compact('user','roles','userRole'));
+        $roles = Role::pluck('name', 'name')->all();
+        $userRole = $user->roles->pluck('name', 'name')->all();
+
+        return view('users.edit', compact('user', 'roles', 'userRole'));
     }
-    
+
     /**
      * Update the specified resource in storage.
      *
@@ -103,28 +145,31 @@ class LeadController extends Controller
     {
         $this->validate($request, [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email,'.$id,
+            'email' => 'required|email|unique:users,email,' . $id,
             'password' => 'same:confirm-password',
-            'roles' => 'required'
+            'roles' => 'required',
         ]);
-    
+
         $input = $request->all();
-        if(!empty($input['password'])){ 
+        if (!empty($input['password'])) {
             $input['password'] = FacadesHash::make($input['password']);
-        }else{
-            $input = Arr::except($input,array('password'));    
+        } else {
+            $input = Arr::except($input, ['password']);
         }
-    
+
         $user = User::find($id);
         $user->update($input);
-        FacadesDB::table('model_has_roles')->where('model_id',$id)->delete();
-    
+        FacadesDB::table('model_has_roles')
+            ->where('model_id', $id)
+            ->delete();
+
         $user->assignRole($request->input('roles'));
-    
-        return redirect()->route('users.index')
-                        ->with('success','User updated successfully');
+
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'User updated successfully');
     }
-    
+
     /**
      * Remove the specified resource from storage.
      *
@@ -134,7 +179,8 @@ class LeadController extends Controller
     public function destroy($id): RedirectResponse
     {
         User::find($id)->delete();
-        return redirect()->route('users.index')
-                        ->with('success','User deleted successfully');
+        return redirect()
+            ->route('users.index')
+            ->with('success', 'User deleted successfully');
     }
 }
