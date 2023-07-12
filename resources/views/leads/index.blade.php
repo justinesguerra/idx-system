@@ -21,7 +21,7 @@
                 <thead class="bg-gray-50 dark:bg-dark-eval-1">
                     <tr>
                         <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
-                            No
+                            User ID
                         </th>
                         <th class="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase">
                             <a href="{{ route('leads.index', ['sort' => 'first_name', 'direction' => (request('sort') === 'first_name' && request('direction') === 'asc') ? 'desc' : 'asc']) }}">
@@ -62,7 +62,7 @@
                 <tbody class="bg-white divide-y divide-gray-200 dark:bg-dark-eval-1">
                     @foreach ($paginatedLeadData as $key => $user)
                         <tr>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ ++$i }}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">{{ $user['id'] }}</td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $user['first_name'] }} {{ $user['last_name'] }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">{{ $user['email'] }}</td>
@@ -70,7 +70,7 @@
                                 <div class="flex gap-2">
                                     <x-button href="{{ route('leads.show', $user['id']) }}" variant="primary"
                                         class="max-w-xs">
-                                        <span>View Activity</span>
+                                        <span>Show Favorites</span>
                                     </x-button>
                                 </div>
                             </td>
