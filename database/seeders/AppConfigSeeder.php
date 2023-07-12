@@ -22,6 +22,7 @@ class AppConfigSeeder extends Seeder
             ["label" => "API_PASSWORD", "value" => "5KkoIO~uTI%1Coc4"],
             ["label" => "LISTINGS_URL", "value" => "https://weilcoravestijn.realtyna.info/wp-json/mo/v1/Listings"],
             ["label" => "LEADS_URL", "value" => "https://weilcoravestijn.realtyna.info/wp-json/mo/v1/Leads"],
+            ["label" => "FAVORITES_URL", "value" => "https://weilcoravestijn.realtyna.info/wp-json/mo/v1/pro-favorites/"],
         ];
 
         AppConfig::insert($data);

@@ -115,8 +115,45 @@ class LeadController extends Controller
      */
     public function show($id): View
     {
-        $user = User::find($id);
-        return view('leads.show', compact('user'));
+        $favoritesUrl = AppConfigTrait::get('FAVORITES_URL', false);
+
+        $favorites_api_response = $this->apiRequestService->api($favoritesUrl . $id);
+
+        // Get the response body as an array
+        $favorites_data = $favorites_api_response->json();
+
+        // Convert favorites_data to a collection
+        $favorites_data_collection = new Collection($favorites_data);
+        
+        $propertiesUrl = AppConfigTrait::get('LISTINGS_URL', false);
+
+        $properties_api_response = $this->apiRequestService->api($propertiesUrl);
+
+        // Get the response body as an array
+        $properties_data = $properties_api_response->json();
+
+        // Extract property IDs from lead_data_collection
+        $lead_property_ids = $favorites_data_collection->pluck('property_id')->toArray();
+
+        // Match property IDs with the IDs from the listings API
+        $matched_properties = collect($properties_data)->whereIn('id', $lead_property_ids);
+
+        // dd($matched_properties);
+
+        $usersUrl = AppConfigTrait::get('LEADS_URL', false);
+
+        $users_api_response = $this->apiRequestService->api($usersUrl);
+
+        // Get the response body as an array
+        $users_data = $users_api_response->json();
+
+        // Extract user IDs from lead_data_collection
+        $lead_user_ids = $favorites_data_collection->pluck('user_id')->toArray();
+
+        // Match user IDs with the IDs from the users API
+        $matched_users = collect($users_data)->whereIn('id', $lead_user_ids);
+        
+        return view('leads.show', compact('matched_users', 'matched_properties'));
     }
 
     /**
