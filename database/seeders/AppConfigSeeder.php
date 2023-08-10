@@ -28,3 +28,4 @@ class AppConfigSeeder extends Seeder
         AppConfig::insert($data);
     }
 }
+ 
