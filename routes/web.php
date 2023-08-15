@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LeadController;
+use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
@@ -36,6 +37,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::resource('users', UserController::class);
     Route::resource('products', ProductController::class);
     Route::resource('leads', LeadController::class);
+    Route::get('listings', [ListingController::class, 'index'])->name('listings.index');
 });
 
 Route::get('/buttons/text', function () {

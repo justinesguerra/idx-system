@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <h2 class="text-xl font-semibold leading-tight">
-                {{ __('Favorite Properties') }} of {{ ucwords(strtolower($matched_users->firstOrFail()['first_name'])) }} {{ ucwords(strtolower($matched_users->firstOrFail()['last_name'])) }}
+                {{-- {{ __('Favorite Properties') }} of {{ ucwords(strtolower($matched_users->firstOrFail()['first_name'])) }} {{ ucwords(strtolower($matched_users->firstOrFail()['last_name'])) }} --}}
             </h2>
             <x-button href="{{ route('leads.index') }}" variant="secondary" class="justify-center max-w-xs gap-2">
                 <x-icons.arrow-left class="w-6 h-6" aria-hidden="true" />

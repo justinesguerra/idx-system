@@ -115,27 +115,34 @@ class LeadController extends Controller
      */
     public function show($id): View
     {
-        $favoritesUrl = AppConfigTrait::get('FAVORITES_URL', false);
+        // $favoritesUrl = AppConfigTrait::get('FAVORITES_URL', false);
 
-        $favorites_api_response = $this->apiRequestService->api($favoritesUrl . $id);
+        // $favorites_api_response = $this->apiRequestService->api($favoritesUrl . $id);
 
-        // Get the response body as an array
-        $favorites_data = $favorites_api_response->json();
+        // // Get the response body as an array
+        // $favorites_data = $favorites_api_response->json();
 
+        $favorites_data = $this->apiRequestService->fetchListingsWithCurl('FAVORITES_URL');
+
+        // dd($favorites_data);
         // Convert favorites_data to a collection
         $favorites_data_collection = new Collection($favorites_data);
         
-        $propertiesUrl = AppConfigTrait::get('LISTINGS_URL', false);
+        // $propertiesUrl = AppConfigTrait::get('LISTINGS_URL', false);
 
-        $properties_api_response = $this->apiRequestService->api($propertiesUrl);
+        // $properties_api_response = $this->apiRequestService->api($propertiesUrl);
 
-        // Get the response body as an array
-        $properties_data = $properties_api_response->json();
+        // // Get the response body as an array
+        // $properties_data = $properties_api_response->json();
+
+        $properties_data = $this->apiRequestService->fetchListingsWithCurl('LISTINGS_URL');
 
         // Extract property IDs from lead_data_collection
+        dd($properties_data);
         $lead_property_ids = $favorites_data_collection->pluck('property_id')->toArray();
-
+        
         // Match property IDs with the IDs from the listings API
+        $favorites_data = $this->apiRequestService->fetchListingsWithCurl('FAVORITES_URL');
         $matched_properties = collect($properties_data)->whereIn('id', $lead_property_ids);
 
         // dd($matched_properties);
