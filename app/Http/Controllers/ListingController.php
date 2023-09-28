@@ -39,6 +39,8 @@ class ListingController extends Controller
             ['path' => request()->url(), 'query' => request()->query()]
         );
 
+        // dd($paginatedProperties);
+
         return view('listings.index', ['properties' => $paginatedProperties]);
     }
 }
